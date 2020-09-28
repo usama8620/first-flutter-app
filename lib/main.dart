@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -21,6 +23,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyLoginPage(title: 'Login'),
+      routes: <String, WidgetBuilder> {
+        '/LoginScreen': (BuildContext context) => new MyLoginPage(),
+        '/MyComplaints': (BuildContext context) => new MyComplaints(),
+        '/MyHomePage': (BuildContext context) => new MyHomePage()
+      },
+
     );
   }
 }
@@ -45,6 +53,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
   @override
   Widget build(BuildContext context) {
 
+
     final numberField = TextField(
       obscureText: false,
       style: style,
@@ -63,22 +72,32 @@ class _MyLoginPageState extends State<MyLoginPage> {
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
-    final loginButon = Material(
+
+    final loginButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
+
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          navigateToSubPage(context);
+          navigateToHomePage(context);
+          // navigateToSubPage(context);
         },
+        // child: Container(
+        //   decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage('assets/login_button.png'), fit: BoxFit.cover),
+        //   ),
         child: Text("Login",
             textAlign: TextAlign.center,
             style: style.copyWith(
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
+
+
 
     final signup = FlatButton(
       child: Text('Register Now'),
@@ -95,6 +114,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
     return Scaffold(
       body: Center(
+
         child: SingleChildScrollView(
         child: Container(
           color: Colors.white,
@@ -107,7 +127,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 SizedBox(
                   height: 200.0,
                   child: Image.asset(
-                    "assets/logo.png",
+                    "assets/electroware_logo.png",
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -118,7 +138,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 SizedBox(
                   height: 35.0,
                 ),
-                loginButon,
+                loginButton,
                 SizedBox(
                   height: 0.0,
                 ),
@@ -132,7 +152,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
   }
 
-  Future navigateToSubPage(context) async {
+  Future navigateToHomePage(context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
   }
 
@@ -145,13 +165,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(title: Text("DashBoard"),
+      centerTitle: true,
+      ),
+      drawer: HomeDrawer(),
+      // appBar: AppBar(
+      //   title: Text("DashBoard"),
+      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Color(0xff01A0C7),
               child: Text('Back to Main Page'),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushNamed(context, '/LoginScreen');
                 // TODO
               },
             )
@@ -172,6 +199,219 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+class HomeDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(child: ListView(
+        children: <Widget>[
+          Container(padding: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
+            // color: HexColor("#31343E"),
+            color: Colors.white,
+            child:Column(children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100.0),
+                child: Image.asset("assets/electroware_logo.png", width: 180, height: 80, fit: BoxFit.fill,),
+              ),
+              SizedBox(width: 8,),
+              RichText(text: TextSpan(children: [
+                TextSpan(text: "Electroware\n\n", style: TextStyle(fontSize:16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: Colors.black87)),
+                TextSpan(text: "03229766208\n", style: TextStyle(fontSize:18, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: Colors.black)),
+                TextSpan(text: "Admin Test\n", style: TextStyle(fontSize:18, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: Colors.black)),
+              ]),),
+            ],),
+          ),
+          Divider(height: 1, thickness: 1, color: Colors.grey[400]),
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Column(children: <Widget>[
+              ListTile(
+                dense: true,
+                title: Text("My Complaints", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.star),
+
+                onTap: (){
+                  Navigator.pushNamed(context, '/MyComplaints');
+                }
+
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Service Tickets", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.event_available),
+                onTap: (){},
+              ),
+              ListTile(
+                title: Text("Service List", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.event_note),
+                onTap: (){
+                  Navigator.pushNamed(context, "/notifications");
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Products", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.shopping_basket),
+                onTap: (){
+                  Navigator.pushNamed(context, "/settings");
+                },
+              ),
+
+              ListTile(
+                dense: true,
+                title: Text("Users", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.people),
+                onTap: (){
+                  Navigator.pushNamed(context, "/settings");
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("About Us", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.help_outline),
+                onTap: (){
+                  Navigator.pushNamed(context, "/settings");
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Contact Us", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.call),
+                onTap: (){
+                  Navigator.pushNamed(context, "/settings");
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Logout", style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.exit_to_app),
+                onTap: (){
+                  Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route<dynamic> route) => false);
+                },
+              ),
+
+            ],),
+          ),
+        ]
+    )
+    );
+
+
+  }
+}
+
+class MyComplaints extends StatefulWidget {
+  @override
+  _MyComplaintsState createState() => _MyComplaintsState();
+
+}
+
+class _MyComplaintsState extends State<MyComplaints> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            backgroundColor: Color(0x44000000),
+            elevation: 0,
+            centerTitle: true,
+            bottom: TabBar(
+              tabs: <Widget>[
+                Tab(
+                  child: Text('My Complaints', style: TextStyle(color: Colors.black)),
+                ),
+                Tab(
+                  child: Text('New Complaint', style: TextStyle(color: Colors.black)),
+                ),
+              ],
+            ),
+            title: Text('COMPLAINTS'),
+          ),
+          body: TabBarView(
+            children: [
+              ComplaintList(),
+              ComplaintList(),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ComplaintList extends StatefulWidget {
+  @override
+  _ComplaintListState createState() => _ComplaintListState();
+
+}
+
+class _ComplaintListState extends State<ComplaintList> {
+
+  List names=["Usama Shahid", "Furqan Ahmed", "Haider Chaudhary", "Hamza Alam", "Ahmed Ali", "Maryum Arshad", "Khizra Shan", "Soha Shakeel",];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+    body: ListView.builder(
+
+      itemCount: names.length,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) => Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        child: Card(
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 55.0,
+                  height: 55.0,
+                  color: Colors.green,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.green,
+                    backgroundImage: NetworkImage
+                      ("https://www.vectorstock.com/royalty-free-vector/social-network-boy-vector-792780"),
+
+                  ),
+
+                ),
+                SizedBox(width: 5.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(names[index], style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  ],
+
+                ),
+              ],
+            ),
+          ),
+      ),
+      ),
+
+    ),
+    );
+  }
+}
+
 
 class MyRegisterPage extends StatefulWidget {
   @override
